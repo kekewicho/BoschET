@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api": "fastapi dev api/app.py"
+    "api": "cd api && fastapi dev app.py"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",

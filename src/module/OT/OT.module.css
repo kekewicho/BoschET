@@ -1,0 +1,13 @@
+.statusicon {
+    font-size: 13pt;
+}
+
+.statusicon[value="1"] {
+    color: orange;
+}
+.statusicon[value="0"] {
+    color: gray;
+}
+.statusicon[value="2"] {
+    color: green;
+}

@@ -1,8 +1,9 @@
-# React + Vite
+# Significado de status
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- 0: OT prevista para su ejecucion en el futuro
+- 1: En proceso
+- 2: Finalizada
 
-Currently, two official plugins are available:
+La logica es que cuando una OT este en status 0, no tendra lista de personal asignado.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A partir del estatus 1 la lista de personal asignado ya debería existir
