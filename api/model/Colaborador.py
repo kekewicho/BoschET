@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Union
 from bson import ObjectId
+from db import db
 
 
 class Colaborador(BaseModel):
@@ -14,6 +15,12 @@ class Colaborador(BaseModel):
 
     def json(self):
         return {**self.__dict__, '_id':str(self._id)}
+    
+    @staticmethod
+    def get_all():
+        res = list(db.plantilla.find())
+        res = [{**s, '_id': str(s['_id'])} for s in res]
+        return res
     
     @staticmethod
     def get_by_id(id):

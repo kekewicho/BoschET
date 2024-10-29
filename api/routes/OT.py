@@ -59,3 +59,10 @@ async def eliminar_orden(id: str):
         return f"Orden {id} eliminada"
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+
+@ot.post('/previsionForecast')
+async def prevision(orden: OT):
+    orden._set_forecast()
+    print(orden.personalForecast)
+    return ""

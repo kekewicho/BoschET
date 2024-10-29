@@ -13,7 +13,7 @@ class OT(BaseModel):
     inicio: str
     final: str
     personalForecast: int
-    personalAsignado: list[int] = Field(default_factory=list)
+    personalAsignado: list[str] = Field(default_factory=list)
 
     _id: Union[str, ObjectId, None] = None
 
@@ -58,10 +58,10 @@ class OT(BaseModel):
             return 0
     
     def _determinar_tpu(self):
-        db.materiales.find_one({'_id':ObjectId(self.producto)})
+        return db.materiales.find_one({'_id':ObjectId(self.producto)}).get('tpu')
     
     def _set_forecast(self):
-        self.personalForecast = int(determinar_personal(self))
+        return int(determinar_personal(self.determinar_tiempo(), self._determinar_tpu(), self.cantidad))
     
 
     @staticmethod

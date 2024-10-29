@@ -11,3 +11,39 @@
 .statusicon[value="2"] {
     color: green;
 }
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid lightgray;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .75em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .75em;
+}
+
+.colabCard {
+    border-radius: 10px;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: row;
+    padding: 5%;
+    margin-block: 10px;
+    width: 100%;
+}
+
+.colabCard img {
+    border-radius: 50%;
+}

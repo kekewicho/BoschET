@@ -35,12 +35,6 @@ export const NavBar = (className) => {
                             <Link className="nav-link" to="#">Órdenes de trabajo</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="#">Plantilla</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="#">Materiales</Link>
-                        </li>
-                        <li className="nav-item">
                             <Link className="nav-link" to="#">Dashboard</Link>
                         </li>
                     </ul>

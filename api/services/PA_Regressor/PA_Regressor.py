@@ -5,5 +5,5 @@ from typing import Union
 model = joblib.load('services\\PA_Regressor\\random_forest.pkl')
 
 
-def determinar_personal(data) -> float:
-    return model.predict([[data.__tiempo, data.__material_tpu, data.cantidad]])[0]
+def determinar_personal(tiempo, tpu, cantidad) -> float:
+    return model.predict([[tiempo, tpu, cantidad]])[0]
