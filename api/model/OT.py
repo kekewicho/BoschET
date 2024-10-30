@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, root_validator
 from typing import Union
 from bson import ObjectId
 from datetime import datetime as dt
@@ -15,36 +15,38 @@ class OT(BaseModel):
     personalForecast: int
     personalAsignado: list[str] = Field(default_factory=list)
 
+    id: Union[str, None] = Field(default_factory=None)
     _id: Union[str, ObjectId, None] = None
 
-    # Atributos no requeridos para la instanciacion
+    # Atributos no requeridos para la instanciación
     __status: Union[int, None] = None
     __tiempo: Union[int, None] = None
     __material_tpu: int = None
 
+
     def json(self):
         return {
-            'producto':self.producto,
-            'cantidad':self.cantidad,
-            'inicio':self.inicio,
-            'final':self.final,
-            'personalForecast':self.personalForecast,
-            'personalAsignado':self.personalAsignado,
-            '_id':str(self._id)
+            'producto': self.producto,
+            'cantidad': self.cantidad,
+            'inicio': self.inicio,
+            'final': self.final,
+            'personalForecast': self.personalForecast,
+            'personalAsignado': self.personalAsignado,
+            '_id': str(self._id) if self._id else None
         }
-    
-    
+
     def guardar(self):
-        print(self._id)
-        if self._id:
-                
-            db.ordenes.update_one({'_id':ObjectId(self._id)}, {"$set": self.json()})
+
+        if self.id:
+            data = self.json()
+            data.pop('_id')
+
+            db.ordenes.update_one({'_id': ObjectId(self.id)}, {"$set": data})
             return 'Modificado'
         else:
-
             if not self.personalForecast:
                 self._set_forecast()
-                
+            
             r = db.ordenes.insert_one(self.json())
             return str(r.inserted_id)
     
