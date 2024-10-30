@@ -66,17 +66,16 @@ export const OT = () => {
         }
 
         console.log(data)
-
-        // fetch('/api/ordenes/guardar', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(data)
-        // })
-        //     .then(r => {
-        //         window.location.reload();
-        //     })
+        fetch('/api/ordenes/guardar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+            .then(r => {
+                window.location.reload();
+            })
     }
 
     const eliminarOrden = (data) => {
@@ -101,21 +100,6 @@ export const OT = () => {
         }
     };
 
-    function forecast() {
-        console.log(ot_json())
-        fetch('/api/ordenes/previsionForecast', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ot_json()),
-        })
-            .then(r => {
-                console.log("");
-            })
-            .catch(error => console.error(error));
-    }
-
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -129,14 +113,29 @@ export const OT = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setSelectedOT((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
 
         const { producto, cantidad, inicio, final } = selectedOT;
         if (producto && cantidad && inicio && final) {
-            forecast();
+            fetch('/api/ordenes/previsionForecast', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ot_json()),
+            })
+                .then(r => r.json())
+                .then(r=> {
+                    setSelectedOT((prev) => ({
+                        ...prev,
+                        [name]: value,
+                        personalForecast:r.forecast
+                    }));
+                })
+        } else {
+            setSelectedOT((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
         };
     };
 
@@ -153,7 +152,7 @@ export const OT = () => {
             ...prev,
             personalAsignado: [...(prev.personalAsignado || []), persona],
         }));
-        setSearchTerm(''); // Limpiar el término de búsqueda después de agregar
+        setSearchTerm('');
     };
 
 
@@ -203,10 +202,10 @@ export const OT = () => {
                                 {ot && ot.map(o => (
                                     <tr key={o._id}>
                                         <td style={{ textAlign: "center" }}>
-                                            <i value={o.status} className={`bi ${o.status === 0 ? "bi-clock-history" : o.status === 1 ? "bi-gear-wide-connected" : "bi-check-circle-fill"} ${styles.statusicon}`}></i>
+                                            <i value={o.status} className={`bi ${o.status === -1 ? "bi bi-exclamation-octagon-fill" : o.status === 0 ? "bi-clock-history" : o.status === 1 ? "bi-gear-wide-connected" : "bi-check-circle-fill"} ${styles.statusicon}`}></i>
                                         </td>
                                         <td>{o.inicio} - {o.final}</td>
-                                        <td>{o.descripcion}</td>
+                                        <td><b style={{ fontSize:'10pt' }}>[{o.cantidad.toLocaleString('en-us')} pz.]&nbsp;&nbsp;</b>{o.descripcion}</td>
                                         <td style={{ textAlign: "center" }}>{o.personalAsignado.length}</td>
                                         <td>
                                             <button className="btn bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></button>
@@ -278,10 +277,16 @@ export const OT = () => {
                                     </div>
                                     <div className="col-4">
                                         <input
-                                            type="number"
+                                            type="text"
                                             className="form-control"
+                                            placeholder="Ingresa numeros positivos"
                                             name="cantidad"
                                             value={selectedOT.cantidad || 0}
+                                            onInput={(e) => {
+                                                // Remueve cualquier parte decimal y asegura que el valor sea >= 1
+                                                const value = Math.floor(e.target.value);
+                                                e.target.value = value < 1 ? 1 : value;
+                                            }}
                                             onChange={handleInputChange}
                                         />
                                     </div>

@@ -2,6 +2,9 @@
     font-size: 13pt;
 }
 
+.statusicon[value="-1"] {
+    color: brown;
+}
 .statusicon[value="1"] {
     color: orange;
 }

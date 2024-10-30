@@ -35,7 +35,7 @@ class OT(BaseModel):
     
     
     def guardar(self):
-        
+        print(self._id)
         if self._id:
                 
             db.ordenes.update_one({'_id':ObjectId(self._id)}, {"$set": self.json()})
@@ -66,12 +66,17 @@ class OT(BaseModel):
 
     @staticmethod
     def filtrar(query_prev, query_post, top = 20):
-        results=db.ordenes.aggregate(OT_With_Full_Data(query_prev,query_post, top))
-        results=[{**r, "status":OT.determinar_status(r['inicio'], r['final'])} for r in results]
+        results=list(db.ordenes.aggregate(OT_With_Full_Data(query_prev,query_post, top)))
+        results=[{**r, "personalAsignado":[] if r['personalAsignado'][0]['_id']==None else r['personalAsignado']} for r in results]
+        results=[{**r, "status":OT.determinar_status(r['inicio'], r['final'], r['personalAsignado'])} for r in results]
+
+        results = list(filter(lambda x: x['_id'] != None, results))
+        
         return results
     
     @staticmethod
-    def determinar_status(inicio, final) -> int:
+    def determinar_status(inicio, final, personalAsignado) -> int:
+        if not personalAsignado: return -1
         if dt.strptime(inicio, DT_FORMAT) <= dt.now():
             if final and dt.strptime(final, DT_FORMAT) <= dt.now():
                 return 2
