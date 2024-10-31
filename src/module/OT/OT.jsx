@@ -4,8 +4,8 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { FloatingBtn } from "../../components/FloatingBtn";
 import { formatDate, calcularHoras, getDefaultDate } from "../../utils";
-import { Calendar } from "react-modern-calendar-datepicker";
-import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import { Calendar } from "@hassanmojab/react-modern-calendar-datepicker";
+import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
 import { Modal } from "../../components/Modal";
 import styles from "./OT.module.css"
 

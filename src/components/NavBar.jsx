@@ -32,10 +32,10 @@ export const NavBar = (className) => {
                     style={{ marginLeft: "15px", justifyContent: "space-between" }}>
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="#">Órdenes de trabajo</Link>
+                            <Link className="nav-link" to="/ordenes">Órdenes de trabajo</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="#">Dashboard</Link>
+                            <Link className="nav-link" to="/dashboard">Dashboard</Link>
                         </li>
                     </ul>
                 </div>

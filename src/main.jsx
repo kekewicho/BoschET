@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
 import { OT } from "./module/OT/OT";
+import { Dashboard } from "./module/Dashboard/Dashboard";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<OT />} />
           <Route path="/ordenes" element={<OT />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

@@ -18,7 +18,7 @@ async def crear_orden(orden: OT):
 
 @ot.get("/")
 async def listar_ordenes(top: Optional[int] = 20, fechaInicial:Optional[str] = None, fechaFinal:Optional[str] = None,
-                         searchString : Optional[str]=None):
+                         searchString : Optional[str]=None, details:Optional[int] = 1, material: Optional[str] = None):
 
     query_prev = []
     query_post = []
@@ -26,12 +26,14 @@ async def listar_ordenes(top: Optional[int] = 20, fechaInicial:Optional[str] = N
     query_prev.append({'inicio': {'$lte':fechaFinal if fechaFinal != None else dt.now().strftime(DT_FORMAT)}})
     query_prev.append({'inicio': {'$gte':fechaInicial if fechaInicial != None else (dt.now()-td(days=30)).strftime(DT_FORMAT)}})
 
+    if material:
+        query_prev.append({'$or':[ {'producto':material}, {'producto':ObjectId(material)} ]})
     
     if searchString:
         query_post.append({'searchString':{"$regex":searchString, "$options":"i"}})
     
 
-    ordenes = OT.filtrar(query_prev, query_post,top=top)
+    ordenes = OT.filtrar(query_prev, query_post,top=top, details = details)
 
     return ordenes
 
@@ -48,7 +50,7 @@ async def eliminar_orden(id: str):
 
 @ot.post('/previsionForecast')
 async def prevision(orden: OT):
-    print(orden)
+
     forecast = orden._set_forecast()
     
     return {'forecast':forecast}

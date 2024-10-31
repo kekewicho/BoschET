@@ -67,9 +67,17 @@ class OT(BaseModel):
     
 
     @staticmethod
-    def filtrar(query_prev, query_post, top = 20):
-        results=list(db.ordenes.aggregate(OT_With_Full_Data(query_prev,query_post, top)))
-        results=[{**r, "personalAsignado":[] if r['personalAsignado'][0]['_id']==None else r['personalAsignado']} for r in results]
+    def filtrar(query_prev, query_post, top = 20, details = 1):
+        if details == 1:
+            results=list(db.ordenes.aggregate(OT_With_Full_Data(query_prev,query_post, top)))
+            results=[{**r, "personalAsignado":[] if r['personalAsignado'][0]['_id']==None else r['personalAsignado']} for r in results]
+        
+        else:
+            results = list(db.ordenes.find({'$and':query_prev}))
+            
+            results = [{**r, '_id':str(r['_id']), 'personalAsignado':len(r['personalAsignado'] or []), 'producto':str(r['producto'])} for r in results]
+            
+        
         results=[{**r, "status":OT.determinar_status(r['inicio'], r['final'], r['personalAsignado'])} for r in results]
 
         results = list(filter(lambda x: x['_id'] != None, results))
