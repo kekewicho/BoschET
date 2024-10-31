@@ -2,11 +2,11 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://cloudwash.alwaysdata.net/api/:path*"
+        "destination": "https://boschet.onrender.com/api/:path*"
       },
       {
         "source": "/api/:path*/",
-        "destination": "https://cloudwash.alwaysdata.net/api/:path*/"
+        "destination": "https://boschet.onrender.com/api/:path*/"
       }
     ]
   }
