@@ -5,12 +5,15 @@
 .statusicon[value="-1"] {
     color: brown;
 }
+
 .statusicon[value="1"] {
     color: orange;
 }
+
 .statusicon[value="0"] {
     color: gray;
 }
+
 .statusicon[value="2"] {
     color: green;
 }
@@ -49,4 +52,8 @@
 
 .colabCard img {
     border-radius: 50%;
+}
+
+.calendar {
+    width: 100% !important;
 }

@@ -1,4 +1,4 @@
-def OT_With_Full_Data(query_prev, query_post, limit = 20):
+def OT_With_Full_Data(query_prev, query_post=[], limit = 20):
 
     agg = [
     {
@@ -27,6 +27,16 @@ def OT_With_Full_Data(query_prev, query_post, limit = 20):
             'preserveNullAndEmptyArrays': True
         }
     }, {
+        '$addFields': {
+            'personalAsignado': {
+                '$toObjectId': '$personalAsignado'
+            }
+        }
+    },{
+        '$addFields': {
+            'productoNombre': '$productoData.descripcion'
+        }
+    },{
         '$lookup': {
             'from': 'plantilla', 
             'localField': 'personalAsignado', 
@@ -91,7 +101,7 @@ def OT_With_Full_Data(query_prev, query_post, limit = 20):
                             'initialValue': ' ', 
                             'in': {
                                 '$concat': [
-                                    '$$value', ' ', '$$this.nombre'
+                                    '$$value', ' ', '$$this.nombre' 
                                 ]
                             }
                         }
@@ -100,9 +110,17 @@ def OT_With_Full_Data(query_prev, query_post, limit = 20):
             }
         }
     }, {
-        "$sort":{"inicio":-1}
+        '$addFields': {
+            'searchString': {
+                '$toUpper':"$searchString"
+            }
+        }
     }, {
-        "$limit": limit
+        "$sort":{"inicio":-1}
     }
 ]
+    
+    if len(query_post) > 0:
+        agg.insert(-1,{'$match':{'$and':[*query_post]}})
+
     return agg

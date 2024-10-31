@@ -11,22 +11,10 @@ ot = APIRouter(prefix="/api/ordenes", tags=["ordenes"])
 
 @ot.post("/guardar")
 async def crear_orden(orden: OT):
-    # try:
 
     orden_id = orden.guardar()
     return orden_id
-    # except Exception as e:
-    #     raise HTTPException(status_code=400, detail=str(e))
 
-@ot.get("/{id}")
-async def obtener_orden(id: str):
-    try:
-        orden = OT.get_by_id(id)
-        if not orden:
-            raise HTTPException(status_code=404, detail="Orden no encontrada")
-        return orden
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
 
 @ot.get("/")
 async def listar_ordenes(top: Optional[int] = 20, fechaInicial:Optional[str] = None, fechaFinal:Optional[str] = None,
@@ -60,6 +48,7 @@ async def eliminar_orden(id: str):
 
 @ot.post('/previsionForecast')
 async def prevision(orden: OT):
+    print(orden)
     forecast = orden._set_forecast()
     
     return {'forecast':forecast}
