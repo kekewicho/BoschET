@@ -1,40 +1,42 @@
+from google.cloud import storage
 import joblib
+import os
+import io
+from google.oauth2 import service_account
+from dotenv import load_dotenv
 
+load_dotenv()
 
-model = joblib.load('services/PA_Regressor/random_forest.pkl')
+def load_model_from_gcs():
+    credentials = service_account.Credentials.from_service_account_info({
+        "type": os.getenv('GCP_TYPE'),
+        "project_id": os.getenv('GCP_PROJECT_ID'),
+        "private_key_id": os.getenv('GCP_PRIVATE_KEY_ID'),
+        "private_key": os.getenv('GCP_PRIVATE_KEY').replace('\\n', '\n'),
+        "client_email": os.getenv('GCP_CLIENT_EMAIL'),
+        "client_id": os.getenv('GCP_CLIENT_ID'),
+        "auth_uri": os.getenv('GCP_AUTH_URI'),
+        "token_uri": os.getenv('GCP_TOKEN_URI'),
+        "auth_provider_x509_cert_url": os.getenv('GCP_AUTH_PROVIDER_CERT_URL'),
+        "client_x509_cert_url": os.getenv('GCP_CLIENT_CERT_URL')
+    })
 
+    client = storage.Client(credentials=credentials)
+    bucket_name = os.getenv('GCS_BUCKET_NAME')
+    model_path = os.getenv('CGS_MODEL_FILE')
+    
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(model_path)
+    
+    model_data = io.BytesIO()
+    blob.download_to_file(model_data)
+    model_data.seek(0)
+    
+    model = joblib.load(model_data)
+    
+    return model
+
+model = load_model_from_gcs()
 
 def determinar_personal(tiempo, tpu, cantidad) -> float:
     return model.predict([[tiempo, tpu, cantidad]])[0]
-
-
-
-# import joblib
-# from google.cloud import storage
-
-# def cargar_modelo_desde_gcs(bucket_name, blob_name):
-#     """Carga un modelo desde un bucket de Google Cloud Storage.
-
-#     Args:
-#         bucket_name: Nombre del bucket de Google Cloud Storage.
-#         blob_name: Nombre del blob (archivo) dentro del bucket.
-
-#     Returns:
-#         El modelo cargado.
-#     """
-
-#     storage_client = storage.Client()
-#     bucket = storage_client.bucket(bucket_name)
-#     blob = bucket.blob(blob_name)
-#     blob.download_to_filename('temp_model.pkl')  # Descarga temporalmente el modelo
-#     model = joblib.load('temp_model.pkl')  # Carga el modelo desde el archivo temporal
-#     return model
-
-# # Reemplaza con los nombres de tu bucket y blob
-# bucket_name = 'tu_bucket_name'
-# blob_name = 'modelos/random_forest.pkl'
-
-# model = cargar_modelo_desde_gcs(bucket_name, blob_name)
-
-# def determinar_personal(tiempo, tpu, cantidad) -> float:
-#     return model.predict([[tiempo, tpu, cantidad]])[0]
