@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api": "cd api && fastapi dev app.py"
+    "api": "cd server && fastapi dev app.py"
   },
   "dependencies": {
     "@hassanmojab/react-modern-calendar-datepicker": "^3.1.7",

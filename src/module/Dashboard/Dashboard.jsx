@@ -2,8 +2,9 @@ import React, { useEffect, useState, useSyncExternalStore } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { formatDate, calcularHoras, getDefaultDate } from "../../utils";
+import { getDefaultDate, sum, mean, dropDuplicates, wmape } from "../../utils";
 import { Modal } from "../../components/Modal";
+import { KpiCard } from "../../components/KpiCard/KpiCard";
 import { Calendar } from "@hassanmojab/react-modern-calendar-datepicker";
 import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
 
@@ -94,13 +95,13 @@ export const Dashboard = () => {
 
     useEffect(() => {
         const queryString = new URLSearchParams(searchArgs).toString();
-        
+
         fetch(`/api/ordenes/?${queryString}&details=0`)
-        .then(res => res.json())
-        .then(res => {
-            setOt(res);
-        })
-        
+            .then(res => res.json())
+            .then(res => {
+                setOt(res);
+            })
+
     }, [searchArgs])
 
     const sorted = groupedData && Object.keys(groupedData).sort((a, b) => new Date(a) - new Date(b))
@@ -111,14 +112,11 @@ export const Dashboard = () => {
             <br />
             <div className="container">
                 <div className="row">
-                    <div className="col-6">
-                        <h6>Visualizar tendencias de fabricación</h6>
-                    </div>
-                </div>
-                <br />
-                <div className="row">
                     <div className="col-4">
-                        <select name="" id="" className="form-select" onChange={(e)=>{setSearchArgs({...searchArgs, material:e.target.value})}}>
+                        <h3>Visualizar tendencias de fabricación</h3>
+                    </div>
+                    <div className="col-sm-3">
+                        <select name="" id="" className="form-select" onChange={(e) => { setSearchArgs({ ...searchArgs, material: e.target.value }) }}>
                             <option value="">Todos los materiales</option>
                             {
                                 mat && mat.map(m => {
@@ -129,8 +127,7 @@ export const Dashboard = () => {
                             }
                         </select>
                     </div>
-                    <div className="col-2"></div>
-                    <div className="col-6 d-flex justify-content-end">
+                    <div className="col-sm-5 d-flex justify-content-end">
                         <button
                             style={{ marginRight: '15px' }}
                             className="btn bi bi-calendar-range-fill cardBtn"
@@ -146,7 +143,7 @@ export const Dashboard = () => {
                 </div>
                 <br /><br />
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-9" style={{ height:'500px' }}>
                         {ot && <Line data={{
                             labels: sorted,
                             datasets: [
@@ -165,6 +162,44 @@ export const Dashboard = () => {
                             ],
                         }} />}
                     </div>
+                        <div className="col-sm-3" style={{ overflowY:'auto', height:'500px' }}>
+                            {ot &&
+                                <>
+                                    <KpiCard
+                                        bootstrapIcon=""
+                                        value={sum(ot, 'cantidad')}
+                                        valuePrefix=""
+                                        caption={"Piezas fabricadas"}
+                                        comparisson={
+                                            mean(ot, 'cantidad')
+                                        }
+                                        comparissonCaption={"pz. promedio / OT"} />
+    
+                                    <KpiCard
+                                        bootstrapIcon=""
+                                        value={ot.length || 0}
+                                        valueInt
+                                        valuePrefix=""
+                                        caption={"Órdenes de trabajo"}
+                                        />
+    
+                                    <KpiCard
+                                        bootstrapIcon=""
+                                        value={dropDuplicates(ot, ['producto']).length}
+                                        valuePrefix=""
+                                        valueInt
+                                        caption={"Materiales producidos"}
+                                        />
+    
+                                    <KpiCard
+                                        bootstrapIcon=""
+                                        value={wmape(ot, 'personalAsignado','personalForecast')}
+                                        valuePrefix=""
+                                        valueSufix="%"
+                                        caption={"WMAPE Forecast vs Real"}/>
+    
+                                </>}
+                        </div>
                 </div>
             </div>
             <Modal

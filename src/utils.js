@@ -43,3 +43,43 @@ export function getDefaultDate() {
         pastDate: pastDateFormatted
     };
 }
+
+
+export const sum = (data, key) => {
+    return data ? data.reduce((sumatoria, d) => sumatoria + d[key], 0) : 0;
+}
+
+export const mean = (data, key) => {
+    const suma = sum(data, key)
+
+    return suma / data.length
+}
+
+
+export const dropDuplicates = (data, keys) => {
+    return data
+        .map(item =>
+            keys.reduce((acc, key) => {
+                acc[key] = item[key];
+                return acc;
+            }, {})
+        )
+        .filter((value, index, self) =>
+            index === self.findIndex(v =>
+                keys.every(key => v[key] === value[key])
+            )
+        );
+}
+
+
+export function wmape(data, real, pred) {
+    if (!data.length) return 0;
+
+    const { absErrorSum, realSum } = data.reduce((acc, item) => {
+        acc.absErrorSum += Math.abs(item[real] - item[pred]);
+        acc.realSum += Math.abs(item[real]);
+        return acc;
+    }, { absErrorSum: 0, realSum: 0 });
+
+    return realSum === 0 ? 0 : (absErrorSum / realSum) * 100;
+}
