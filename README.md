@@ -1,5 +1,6 @@
 # Significado de status
 
+- -1: Sin personal asignado. Status de mayor jerarquía
 - 0: OT prevista para su ejecucion en el futuro
 - 1: En proceso
 - 2: Finalizada
