@@ -2,11 +2,11 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://boschet.onrender.com/api/:path*"
+        "destination": "https://drcleanzacatecas.alwaysdata.net/*"
       },
       {
         "source": "/api/:path*/",
-        "destination": "https://boschet.onrender.com/api/:path*/"
+        "destination": "https://drcleanzacatecas.alwaysdata.net/*/"
       }
     ]
   }
