@@ -110,8 +110,9 @@ export const Dashboard = () => {
         <>
             <NavBar />
             <br />
+            <iframe style={{ width:'100%', height:'90vh' }} title="Dashboard" width="600" height="373.5" src="https://app.powerbi.com/view?r=eyJrIjoiNmZmMGY1ZGMtMjhlYS00MWY0LWE2MzQtNmIyZTJiZDI0YTBkIiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9" frameborder="0" allowFullScreen="true"></iframe>
             <div className="container">
-                <div className="row">
+                {/* <div className="row">
                     <div className="col-4">
                         <h3>Visualizar tendencias de fabricación</h3>
                     </div>
@@ -200,9 +201,9 @@ export const Dashboard = () => {
     
                                 </>}
                         </div>
-                </div>
+                </div> */}
             </div>
-            <Modal
+            {/* <Modal
                 title="Seleccionar rango de fechas a consultar"
                 idRef="fechaModal"
                 styles={{ display: 'flex', justifyContent: 'center', padding: 0 }}>
@@ -224,7 +225,7 @@ export const Dashboard = () => {
                     calendarClassName={styles.calendar}
                     calendarSelectedDayClassName={styles.calendarSelectedDay}
                 />
-            </Modal>
+            </Modal> */}
         </>
     );
 }
